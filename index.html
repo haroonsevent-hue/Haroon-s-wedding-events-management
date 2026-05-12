@@ -3,12 +3,33 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Haroon's Luxury Events</title>
+<title>Haroon's Weddings & Events</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    gold: '#C5A059',
+                    dark: '#071a14',
+                    darker: '#03100c'
+                },
+                fontFamily: {
+                    serif: ['Playfair Display', 'serif'],
+                    sans: ['Inter', 'sans-serif']
+                }
+            }
+        }
+    }
+</script>
 
 <style>
 
@@ -18,198 +39,263 @@ padding:0;
 box-sizing:border-box;
 }
 
+html{
+scroll-behavior:auto;
+}
+
 body{
+background:#03100c;
 font-family:Inter,sans-serif;
-background:#050505;
-color:white;
 overflow-x:hidden;
+color:white;
 }
 
-.hero-video{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-opacity:0.25;
+::-webkit-scrollbar{
+width:8px;
 }
 
-.noise{
+::-webkit-scrollbar-thumb{
+background:#C5A059;
+border-radius:999px;
+}
+
+.scroll-progress{
+position:fixed;
+top:0;
+left:0;
+height:4px;
+width:0%;
+background:linear-gradient(to right,#C5A059,#f5d08b);
+z-index:999999;
+}
+
+body::before{
+content:'';
 position:fixed;
 inset:0;
 pointer-events:none;
-opacity:0.04;
-background-image:url('https://grainy-gradients.vercel.app/noise.svg');
-z-index:999;
+background:
+radial-gradient(circle at 20% 20%, rgba(197,160,89,0.12), transparent 25%),
+radial-gradient(circle at 80% 30%, rgba(197,160,89,0.08), transparent 20%),
+radial-gradient(circle at 50% 80%, rgba(197,160,89,0.08), transparent 25%);
+z-index:1;
 }
 
-.gradient-orb{
-position:absolute;
-width:500px;
-height:500px;
-background:radial-gradient(circle,#ffb347 0%,transparent 70%);
-filter:blur(120px);
-opacity:0.25;
+section{
+position:relative;
+z-index:2;
 }
 
-.hero-title span{
-display:block;
-overflow:hidden;
-}
-
-.hero-title span div{
-transform:translateY(120%);
+nav{
+transition:0.4s ease;
 }
 
 .glass{
-background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
+background:rgba(255,255,255,0.05);
 border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.hero-bg{
+position:absolute;
+inset:0;
+overflow:hidden;
+}
+
+.hero-bg img{
+width:100%;
+height:100%;
+object-fit:cover;
+transform:scale(1.2);
+opacity:0.5;
+}
+
+.hero-overlay{
+position:absolute;
+inset:0;
+background:
+linear-gradient(to bottom,rgba(0,0,0,0.2),rgba(0,0,0,0.8)),
+radial-gradient(circle at center,transparent,rgba(0,0,0,0.9));
+}
+
+.hero-title{
+overflow:hidden;
+}
+
+.hero-title span{
+display:inline-block;
+transform:translateY(120%);
+}
+
+.floating-light{
+position:absolute;
+width:450px;
+height:450px;
+border-radius:999px;
+background:rgba(197,160,89,0.12);
+filter:blur(100px);
+}
+
+.reveal-up{
+opacity:0;
+transform:translateY(100px);
+}
+
+.blur-in{
+opacity:0;
+filter:blur(20px);
 }
 
 .service-card{
-transition:0.6s;
-position:relative;
-overflow:hidden;
-}
-
-.service-card::before{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(135deg,transparent,rgba(255,179,71,0.15),transparent);
-transform:translateX(-100%);
-transition:1s;
-}
-
-.service-card:hover::before{
-transform:translateX(100%);
+transition:0.6s ease;
 }
 
 .service-card:hover{
-transform:translateY(-15px) scale(1.02);
+transform:translateY(-15px);
+}
+
+.gallery-track{
+display:flex;
+gap:30px;
+width:max-content;
 }
 
 .gallery-item{
+width:500px;
 height:650px;
-overflow:hidden;
 border-radius:30px;
+overflow:hidden;
 position:relative;
+flex-shrink:0;
 }
 
 .gallery-item img{
 width:100%;
 height:100%;
 object-fit:cover;
-transition:1s;
+transition:1s ease;
 }
 
 .gallery-item:hover img{
-transform:scale(1.1);
+transform:scale(1.08);
 }
 
 .gallery-overlay{
 position:absolute;
 inset:0;
-background:linear-gradient(to top,rgba(0,0,0,0.9),transparent 60%);
+background:linear-gradient(to top,rgba(0,0,0,0.9),transparent 50%);
 display:flex;
 align-items:flex-end;
 padding:40px;
 }
 
-.marquee{
-overflow:hidden;
-white-space:nowrap;
+.gallery-overlay h3{
+font-size:2rem;
+font-family:Playfair Display,serif;
 }
 
-.marquee h1{
-display:inline-block;
-font-size:10vw;
-font-weight:800;
-font-family:Syne,sans-serif;
-text-transform:uppercase;
-animation:marquee 18s linear infinite;
-color:rgba(255,255,255,0.08);
+.stat-box{
+text-align:center;
 }
 
-@keyframes marquee{
-0%{transform:translateX(0)}
-100%{transform:translateX(-100%)}
+.magnetic{
+transition:0.2s ease;
 }
 
-.btn-modern{
-position:relative;
-overflow:hidden;
-}
-
-.btn-modern::before{
-content:'';
-position:absolute;
-top:0;
-left:-100%;
+.contact-input{
 width:100%;
-height:100%;
-background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
-transition:0.8s;
+padding:18px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:18px;
+outline:none;
+color:white;
 }
 
-.btn-modern:hover::before{
-left:100%;
+.contact-input:focus{
+border-color:#C5A059;
 }
 
-.scroll-line{
-position:fixed;
-top:0;
-left:0;
-height:4px;
-background:#ffb347;
-width:0%;
-z-index:9999;
+.footer-link{
+transition:0.3s ease;
+}
+
+.footer-link:hover{
+color:#C5A059;
+transform:translateX(5px);
+}
+
+@media(max-width:768px){
+.gallery-item{
+width:85vw;
+height:500px;
+}
 }
 
 </style>
 </head>
 <body>
 
-<div class="noise"></div>
-<div class="scroll-line"></div>
+<div class="scroll-progress"></div>
 
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 py-6">
+<div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
-<div class="gradient-orb top-[-200px] left-[-100px]"></div>
-<div class="gradient-orb bottom-[-200px] right-[-100px]"></div>
+<div>
+<h1 class="text-2xl md:text-3xl font-serif font-bold tracking-widest text-white">
+HAROON'S
+</h1>
+<p class="text-gold uppercase tracking-[0.4em] text-[10px] mt-1">
+Weddings & Events
+</p>
+</div>
 
-<video autoplay muted loop playsinline class="hero-video">
-<source src="https://cdn.coverr.co/videos/coverr-wedding-toast-1565197702143?download=1080p" type="video/mp4">
-</video>
+<div class="hidden md:flex items-center gap-10 uppercase text-sm tracking-widest">
+<a href="#home" class="hover:text-gold transition">Home</a>
+<a href="#services" class="hover:text-gold transition">Services</a>
+<a href="#gallery" class="hover:text-gold transition">Gallery</a>
+<a href="#contact" class="hover:text-gold transition">Contact</a>
+</div>
 
-<div class="absolute inset-0 bg-black/60"></div>
+</div>
+</nav>
 
-<div class="relative z-10 text-center max-w-7xl">
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-<p class="uppercase tracking-[0.5em] text-orange-300 mb-8 text-sm opacity-80">
-Luxury Wedding Experiences
+<div class="floating-light top-0 left-0"></div>
+<div class="floating-light bottom-0 right-0"></div>
+
+<div class="hero-bg">
+<img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1974&auto=format&fit=crop">
+<div class="hero-overlay"></div>
+</div>
+
+<div class="relative z-10 text-center px-6 max-w-6xl">
+
+<p class="text-gold uppercase tracking-[0.4em] mb-8 blur-in">
+Luxury Event Experience Since 1989
 </p>
 
-<h1 class="hero-title text-[16vw] leading-[0.85] font-black font-[Syne] uppercase">
-<span><div>Future</div></span>
-<span><div>Of</div></span>
-<span><div>Events</div></span>
+<h1 class="hero-title text-6xl md:text-8xl lg:text-[9rem] leading-none font-serif font-bold mb-10">
+<span>Crafting</span><br>
+<span class="italic text-gold">Timeless</span><br>
+<span>Celebrations</span>
 </h1>
 
-<p class="max-w-2xl mx-auto text-lg md:text-2xl text-gray-300 mt-10 leading-relaxed opacity-0 intro-text">
-We build cinematic wedding experiences with bold storytelling, luxury visuals, and unforgettable emotion.
+<p class="max-w-2xl mx-auto text-lg md:text-2xl text-gray-300 reveal-up leading-relaxed">
+Premium wedding and luxury event experiences designed with cinematic elegance, unforgettable storytelling, and flawless execution.
 </p>
 
-<div class="flex flex-wrap justify-center gap-6 mt-14 opacity-0 hero-buttons">
+<div class="flex flex-wrap justify-center gap-5 mt-12 reveal-up">
 
-<button class="btn-modern bg-orange-400 text-black px-10 py-5 rounded-full text-lg font-bold hover:scale-105 transition">
-Explore Work
-</button>
+<a href="#gallery" class="magnetic bg-gold text-white px-10 py-5 rounded-full font-bold text-lg shadow-2xl hover:scale-105 transition">
+Explore Portfolio
+</a>
 
-<button class="btn-modern glass px-10 py-5 rounded-full text-lg hover:bg-white/10 transition">
-Watch Showreel
-</button>
+<a href="#contact" class="magnetic border border-white/20 px-10 py-5 rounded-full backdrop-blur-lg hover:bg-white/10 transition">
+Book Consultation
+</a>
 
 </div>
 
@@ -217,249 +303,354 @@ Watch Showreel
 
 </section>
 
-<section class="py-32 px-6 bg-[#080808]">
+<section id="services" class="py-32 bg-[#071a14] overflow-hidden">
 
-<div class="marquee mb-24">
-<h1>Luxury • Weddings • Events • Cinematic • Luxury • Weddings • Events • Cinematic •</h1>
-</div>
+<div class="max-w-7xl mx-auto px-6">
 
-<div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-10">
-
-<div class="service-card glass p-10 rounded-[35px] opacity-0 reveal-card">
-<div class="text-7xl mb-10">💎</div>
-<h2 class="text-4xl font-bold mb-6 font-[Syne]">Luxury Design</h2>
-<p class="text-gray-400 text-lg leading-loose">
-High-end stage concepts, floral artistry, lighting direction, and immersive visual storytelling.
+<div class="text-center mb-24">
+<p class="text-gold uppercase tracking-[0.4em] mb-5 reveal-up">
+Our Expertise
 </p>
-</div>
 
-<div class="service-card glass p-10 rounded-[35px] opacity-0 reveal-card">
-<div class="text-7xl mb-10">🎬</div>
-<h2 class="text-4xl font-bold mb-6 font-[Syne]">Cinematic Production</h2>
-<p class="text-gray-400 text-lg leading-loose">
-Drone shots, luxury entries, stage productions, and unforgettable wedding films.
-</p>
-</div>
-
-<div class="service-card glass p-10 rounded-[35px] opacity-0 reveal-card">
-<div class="text-7xl mb-10">✨</div>
-<h2 class="text-4xl font-bold mb-6 font-[Syne]">Premium Experience</h2>
-<p class="text-gray-400 text-lg leading-loose">
-Every guest interaction is crafted to feel emotional, immersive, and unforgettable.
-</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="py-32 px-6 bg-black">
-
-<div class="max-w-7xl mx-auto mb-20">
-<h2 class="text-6xl md:text-8xl font-black font-[Syne] uppercase leading-none opacity-0 gallery-title">
-Selected Works
+<h2 class="text-5xl md:text-7xl font-serif font-bold reveal-up">
+Luxury Services
 </h2>
 </div>
 
-<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+<div class="grid lg:grid-cols-3 gap-10">
 
-<div class="gallery-item opacity-0 gallery-card">
+<div class="service-card glass rounded-[30px] p-10 reveal-up">
+<div class="text-6xl mb-8">💍</div>
+<h3 class="text-3xl font-serif mb-6">Wedding Planning</h3>
+<p class="text-gray-300 leading-loose text-lg">
+From destination weddings to royal receptions, we create cinematic celebrations filled with emotion and elegance.
+</p>
+</div>
+
+<div class="service-card glass rounded-[30px] p-10 reveal-up">
+<div class="text-6xl mb-8">✨</div>
+<h3 class="text-3xl font-serif mb-6">Luxury Decoration</h3>
+<p class="text-gray-300 leading-loose text-lg">
+Immersive floral artistry, luxury stage concepts, lighting design, and premium venue styling.
+</p>
+</div>
+
+<div class="service-card glass rounded-[30px] p-10 reveal-up">
+<div class="text-6xl mb-8">🎥</div>
+<h3 class="text-3xl font-serif mb-6">Experience Production</h3>
+<p class="text-gray-300 leading-loose text-lg">
+Entertainment shows, cinematic entries, stage direction, and unforgettable guest experiences.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="gallery" class="bg-black py-32 overflow-hidden">
+
+<div class="px-6 mb-20">
+<p class="text-gold uppercase tracking-[0.4em] mb-5 reveal-up">
+Portfolio Showcase
+</p>
+
+<h2 class="text-5xl md:text-7xl font-serif font-bold reveal-up">
+Cinematic Moments
+</h2>
+</div>
+
+<div class="gallery-wrapper overflow-hidden">
+
+<div class="gallery-track px-10">
+
+<div class="gallery-item">
 <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1974&auto=format&fit=crop">
 <div class="gallery-overlay">
-<div>
-<p class="uppercase text-orange-300 tracking-[0.3em] text-sm mb-3">Wedding</p>
-<h2 class="text-5xl font-bold font-[Syne]">Royal Night</h2>
-</div>
+<h3>Royal Wedding</h3>
 </div>
 </div>
 
-<div class="gallery-item opacity-0 gallery-card">
+<div class="gallery-item">
 <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1974&auto=format&fit=crop">
 <div class="gallery-overlay">
+<h3>Luxury Reception</h3>
+</div>
+</div>
+
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=1974&auto=format&fit=crop">
+<div class="gallery-overlay">
+<h3>Destination Event</h3>
+</div>
+</div>
+
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1974&auto=format&fit=crop">
+<div class="gallery-overlay">
+<h3>Luxury Celebration</h3>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="py-32 bg-[#071a14]">
+
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12">
+
+<div class="stat-box reveal-up">
+<h2 class="text-5xl font-bold text-gold mb-4">30+</h2>
+<p class="uppercase tracking-widest text-sm text-gray-300">Years Experience</p>
+</div>
+
+<div class="stat-box reveal-up">
+<h2 class="text-5xl font-bold text-gold mb-4">10M+</h2>
+<p class="uppercase tracking-widest text-sm text-gray-300">Guests Served</p>
+</div>
+
+<div class="stat-box reveal-up">
+<h2 class="text-5xl font-bold text-gold mb-4">1M+</h2>
+<p class="uppercase tracking-widest text-sm text-gray-300">Happy Clients</p>
+</div>
+
+<div class="stat-box reveal-up">
+<h2 class="text-5xl font-bold text-gold mb-4">50+</h2>
+<p class="uppercase tracking-widest text-sm text-gray-300">Awards Won</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="contact" class="py-32 bg-black">
+
+<div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+
 <div>
-<p class="uppercase text-orange-300 tracking-[0.3em] text-sm mb-3">Luxury</p>
-<h2 class="text-5xl font-bold font-[Syne]">Golden Celebration</h2>
-</div>
-</div>
-</div>
-
-</div>
-
-</section>
-
-<section class="py-32 px-6 bg-[#080808]">
-
-<div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-10 text-center">
-
-<div class="opacity-0 stat">
-<h1 class="text-7xl font-black text-orange-300 font-[Syne] mb-4">30+</h1>
-<p class="uppercase tracking-[0.3em] text-sm text-gray-400">Years</p>
-</div>
-
-<div class="opacity-0 stat">
-<h1 class="text-7xl font-black text-orange-300 font-[Syne] mb-4">10M</h1>
-<p class="uppercase tracking-[0.3em] text-sm text-gray-400">Guests</p>
-</div>
-
-<div class="opacity-0 stat">
-<h1 class="text-7xl font-black text-orange-300 font-[Syne] mb-4">1M+</h1>
-<p class="uppercase tracking-[0.3em] text-sm text-gray-400">Clients</p>
-</div>
-
-<div class="opacity-0 stat">
-<h1 class="text-7xl font-black text-orange-300 font-[Syne] mb-4">50+</h1>
-<p class="uppercase tracking-[0.3em] text-sm text-gray-400">Awards</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="py-32 px-6 bg-black">
-
-<div class="max-w-4xl mx-auto text-center">
-
-<h2 class="text-6xl md:text-8xl font-black font-[Syne] uppercase mb-10 opacity-0 contact-title">
-Let's Build
-Your Dream
-</h2>
-
-<p class="text-gray-400 text-xl leading-loose mb-16 opacity-0 contact-text">
-Ready to create a next-level luxury wedding experience?
-Let's turn your dream into a cinematic masterpiece.
+<p class="text-gold uppercase tracking-[0.4em] mb-5 reveal-up">
+Contact Us
 </p>
 
-<button class="btn-modern bg-orange-400 text-black px-14 py-6 rounded-full text-xl font-bold hover:scale-105 transition opacity-0 contact-btn">
-Start Your Journey
+<h2 class="text-5xl md:text-7xl font-serif font-bold mb-10 reveal-up">
+Let's Create Magic
+</h2>
+
+<p class="text-gray-300 text-lg leading-loose reveal-up">
+We craft unforgettable wedding and luxury event experiences tailored to your dream vision.
+</p>
+
+<div class="mt-12 space-y-6 text-gray-300 text-lg">
+<div>📍 Edavanna, Kerala</div>
+<div>📞 +91 9037874001</div>
+<div>✉️ haroonsevent@gmail.com</div>
+</div>
+</div>
+
+<div class="glass rounded-[35px] p-10 reveal-up">
+
+<form class="space-y-6">
+
+<input type="text" placeholder="Your Name" class="contact-input">
+
+<input type="email" placeholder="Your Email" class="contact-input">
+
+<input type="text" placeholder="Event Type" class="contact-input">
+
+<textarea rows="5" placeholder="Tell us about your dream event" class="contact-input"></textarea>
+
+<button class="magnetic w-full bg-gold py-5 rounded-full text-lg font-bold hover:scale-[1.02] transition">
+Send Inquiry
 </button>
+
+</form>
+
+</div>
 
 </div>
 
 </section>
+
+<footer class="py-16 bg-[#03100c] border-t border-white/10">
+
+<div class="max-w-7xl mx-auto px-6 text-center">
+
+<h2 class="text-4xl font-serif mb-5">
+HAROON'S
+</h2>
+
+<p class="text-gold uppercase tracking-[0.4em] text-xs mb-10">
+Weddings & Events
+</p>
+
+<div class="flex justify-center gap-10 mb-10 text-sm uppercase tracking-widest">
+<a href="#home" class="footer-link">Home</a>
+<a href="#services" class="footer-link">Services</a>
+<a href="#gallery" class="footer-link">Gallery</a>
+<a href="#contact" class="footer-link">Contact</a>
+</div>
+
+<p class="text-gray-500 text-sm">
+© 2026 Haroon's Weddings & Events. All Rights Reserved.
+</p>
+
+</div>
+
+</footer>
 
 <script>
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
-const progress=document.querySelector('.scroll-line')
+const lenis = new Lenis({
+    duration:1.2,
+    smoothWheel:true
+});
+
+function raf(time){
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+}
+
+requestAnimationFrame(raf);
+
+const progress=document.querySelector('.scroll-progress');
 
 window.addEventListener('scroll',()=>{
+const winScroll=document.documentElement.scrollTop;
+const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+const scrolled=(winScroll/height)*100;
+progress.style.width=scrolled+'%';
+});
 
-const winScroll=document.documentElement.scrollTop
-const height=document.documentElement.scrollHeight-document.documentElement.clientHeight
-const scrolled=(winScroll/height)*100
-progress.style.width=scrolled+'%'
+const titleSpans=document.querySelectorAll('.hero-title span');
 
-})
-
-gsap.to('.hero-title div',{
+gsap.to(titleSpans,{
 y:0,
 duration:1.4,
 stagger:0.15,
 ease:'power4.out'
-})
+});
 
-gsap.to('.intro-text',{
+gsap.utils.toArray('.reveal-up').forEach((el)=>{
+
+gsap.to(el,{
 opacity:1,
 y:0,
-duration:1,
-delay:1
-})
+duration:1.2,
+ease:'power3.out',
+scrollTrigger:{
+trigger:el,
+start:'top 85%'
+}
+});
 
-gsap.to('.hero-buttons',{
+});
+
+gsap.utils.toArray('.blur-in').forEach((el)=>{
+
+gsap.to(el,{
 opacity:1,
+filter:'blur(0px)',
+duration:1.5,
+ease:'power3.out'
+});
+
+});
+
+gsap.to('.hero-bg img',{
+yPercent:15,
+scale:1.1,
+ease:'none',
+scrollTrigger:{
+trigger:'#home',
+start:'top top',
+end:'bottom top',
+scrub:true
+}
+});
+
+const galleryTrack=document.querySelector('.gallery-track');
+
+if(galleryTrack){
+
+gsap.to(galleryTrack,{
+x:()=>-(galleryTrack.scrollWidth-window.innerWidth+100),
+ease:'none',
+scrollTrigger:{
+trigger:'.gallery-wrapper',
+start:'top top',
+end:()=>'+='+galleryTrack.scrollWidth,
+scrub:true,
+pin:true,
+anticipatePin:1
+}
+});
+
+}
+
+const magneticButtons=document.querySelectorAll('.magnetic');
+
+magneticButtons.forEach(btn=>{
+
+btn.addEventListener('mousemove',e=>{
+
+const rect=btn.getBoundingClientRect();
+const x=e.clientX-rect.left-rect.width/2;
+const y=e.clientY-rect.top-rect.height/2;
+
+gsap.to(btn,{
+x:x*0.25,
+y:y*0.25,
+duration:0.3
+});
+
+});
+
+btn.addEventListener('mouseleave',()=>{
+
+gsap.to(btn,{
+x:0,
 y:0,
-duration:1,
-delay:1.3
-})
+duration:0.5,
+ease:'elastic.out(1,0.3)'
+});
 
-gsap.utils.toArray('.reveal-card').forEach(card=>{
+});
 
-gsap.to(card,{
-opacity:1,
-y:-20,
-duration:1.2,
-scrollTrigger:{
-trigger:card,
-start:'top 85%'
+});
+
+window.addEventListener('scroll',()=>{
+
+const nav=document.getElementById('navbar');
+
+if(window.scrollY>50){
+nav.style.background='rgba(3,16,12,0.75)';
+nav.style.backdropFilter='blur(20px)';
+nav.style.borderBottom='1px solid rgba(255,255,255,0.08)';
 }
-})
-
-})
-
-gsap.to('.gallery-title',{
-opacity:1,
-y:-20,
-duration:1,
-scrollTrigger:{
-trigger:'.gallery-title',
-start:'top 80%'
+else{
+nav.style.background='transparent';
+nav.style.backdropFilter='blur(0px)';
+nav.style.borderBottom='none';
 }
-})
 
-gsap.utils.toArray('.gallery-card').forEach(card=>{
+});
 
-gsap.to(card,{
-opacity:1,
-y:-30,
-duration:1.2,
-scrollTrigger:{
-trigger:card,
-start:'top 85%'
-}
-})
-
-})
-
-gsap.utils.toArray('.stat').forEach((stat,i)=>{
-
-gsap.to(stat,{
-opacity:1,
-y:-20,
-duration:1,
-delay:i*0.15,
-scrollTrigger:{
-trigger:stat,
-start:'top 90%'
-}
-})
-
-})
-
-gsap.to('.contact-title',{
-opacity:1,
-y:-20,
-duration:1,
-scrollTrigger:{
-trigger:'.contact-title',
-start:'top 85%'
-}
-})
-
-gsap.to('.contact-text',{
-opacity:1,
-y:-20,
-duration:1,
-delay:0.2,
-scrollTrigger:{
-trigger:'.contact-text',
-start:'top 85%'
-}
-})
-
-gsap.to('.contact-btn',{
-opacity:1,
-y:-20,
-duration:1,
-delay:0.4,
-scrollTrigger:{
-trigger:'.contact-btn',
-start:'top 85%'
-}
-})
+gsap.to('.floating-light',{
+y:100,
+x:80,
+duration:10,
+repeat:-1,
+yoyo:true,
+ease:'sine.inOut'
+});
 
 </script>
 
 </body>
 </html>
-```
